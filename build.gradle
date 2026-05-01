@@ -1,0 +1,66 @@
+plugins {
+    id 'net.fabricmc.fabric-loom-remap' version '1.16-SNAPSHOT'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+    maven {
+        url = "https://repo.codemc.io/repository/relativitymc/"
+    }
+}
+
+fabricApi {
+    configureDataGeneration {
+        client = true
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "org.relativitymc:modern-yarn:26.1.2+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+}
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
+    }
+}
+
+loom {
+    useIntermediateMappings = true
+    intermediaryUrl = 'https://repo.codemc.io/repository/relativitymc/org/relativitymc/intermediary/%1$s/intermediary-%1$s-v2.jar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 25
+}
+
+tasks.register("prodServer", net.fabricmc.loom.task.prod.ServerProductionRunTask) {
+    runDir = file("run")
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.register("prodClient", net.fabricmc.loom.task.prod.ClientProductionRunTask) {}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+    inputs.property "projectName", project.name
+
+    from("LICENSE") {
+        rename { "${it}_${project.name}"}
+    }
+}

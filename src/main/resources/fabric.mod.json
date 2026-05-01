@@ -1,0 +1,26 @@
+{
+	"schemaVersion": 1,
+	"id": "ctoggle",
+	"version": "${version}",
+	"name": "Combat Toggle",
+	"description": "Server-sided mod to allow players to toggle PvP status.",
+	"authors": [
+		"LilyflowerFDL"
+	],
+	"license": "CC0-1.0",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"gdn.hypercube.ctoggle.CombatToggle"
+		]
+	},
+	"mixins": [
+		"ctoggle.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
