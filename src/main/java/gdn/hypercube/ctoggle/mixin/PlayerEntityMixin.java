@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,8 +20,16 @@ public class PlayerEntityMixin {
         if (source.getAttacker() instanceof PlayerEntity) {
             PlayerEntity current = ((PlayerEntity) (Object) this);
             if (CombatToggle.TOGGLED_PLAYERS.contains(current.getUuid()) && current != source.getAttacker()) {
-                cir.cancel();
+                cir.setReturnValue(false);
             }
+        }
+    }
+
+    @Inject(method = "shouldDamagePlayer", at = @At("HEAD"), cancellable = true)
+    public void toggle(PlayerEntity player, CallbackInfoReturnable<Boolean> cir) {
+        PlayerEntity current = ((PlayerEntity) (Object) this);
+        if (CombatToggle.TOGGLED_PLAYERS.contains(current.getUuid()) || CombatToggle.TOGGLED_PLAYERS.contains(player.getUuid())) {
+            cir.setReturnValue(false);
         }
     }
 
