@@ -42,14 +42,14 @@ public class CombatToggle implements ModInitializer {
 
 		ServerLifecycleEvents.SERVER_STOPPING.register(_ -> {
 			try {
-				try (BufferedWriter writer = Files.newBufferedWriter(Path.of("ct_toggled.dat"), StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING)) {
+				try (BufferedWriter writer = Files.newBufferedWriter(Path.of("ct_toggled.dat"), StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 					for (UUID uuid : TOGGLED_PLAYERS) {
 						writer.write(uuid.toString());
 						writer.newLine();
 					}
 				}
 
-				try (BufferedWriter writer = Files.newBufferedWriter(Path.of("ct_blocked.dat"), StandardOpenOption.WRITE, StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING)) {
+				try (BufferedWriter writer = Files.newBufferedWriter(Path.of("ct_blocked.dat"), StandardOpenOption.WRITE, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 					for (UUID uuid : BLOCKED_PLAYERS) {
 						writer.write(uuid.toString());
 						writer.newLine();
